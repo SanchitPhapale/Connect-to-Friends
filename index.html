@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 📱 Mobile responsive ke liye -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 🔠 Professional font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <title>Call_Box</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- LOGIN -->
+        <div id="loginBox" class="box">
+            <h2>Secure Login</h2>
+            <input type="text" id="username" placeholder="Enter Your Name">
+            <input type="password" id="password" placeholder="Enter Password">
+            <button onclick="checkLogin()">Connect</button>
+            <p id="error"></p>
+        </div>
+
+        <!-- CALL -->
+        <div id="callBox" class="box hidden">
+            <h2>Secure Call</h2>
+
+            <p><b>Connected Users:</b></p>
+            <ul id="userList"></ul>
+
+            <p id="timer">00:00</p>
+
+            <div class="controls">
+                <button onclick="toggleMic()" id="micBtn">Mic OFF</button>
+                <button onclick="endCall()" class="end">End Call</button>
+            </div>
+
+            <p id="status"></p>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
