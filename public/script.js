@@ -22,8 +22,14 @@ async function checkLogin() {
   loginBox.classList.add("hidden");
   callBox.classList.remove("hidden");
 
-  // 🔥 Get mic FIRST
-  localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  // 🔥 Echo Fix Applied Here
+  localStream = await navigator.mediaDevices.getUserMedia({
+    audio: {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true
+    }
+  });
 
   socket.emit("join", name);
 
@@ -66,9 +72,11 @@ socket.on("offer", async (data) => {
 
 // ANSWER
 socket.on("answer", async (data) => {
-  await peers[data.sender].setRemoteDescription(
-    new RTCSessionDescription(data.answer)
-  );
+  if (peers[data.sender]) {
+    await peers[data.sender].setRemoteDescription(
+      new RTCSessionDescription(data.answer)
+    );
+  }
 });
 
 // ICE
@@ -99,9 +107,12 @@ function createPeer(targetId, initiator) {
   const peer = new RTCPeerConnection(config);
   peers[targetId] = peer;
 
-  localStream.getTracks().forEach(track => {
-    peer.addTrack(track, localStream);
-  });
+  // Add mic tracks safely
+  if (localStream) {
+    localStream.getTracks().forEach(track => {
+      peer.addTrack(track, localStream);
+    });
+  }
 
   peer.onicecandidate = (event) => {
     if (event.candidate) {
@@ -112,8 +123,12 @@ function createPeer(targetId, initiator) {
     }
   };
 
+  // 🔥 Prevent self-audio loop
   peer.ontrack = (event) => {
-    remoteAudio.srcObject = event.streams[0];
+    if (event.streams && event.streams[0]) {
+      remoteAudio.srcObject = event.streams[0];
+      remoteAudio.volume = 1;
+    }
   };
 
   if (initiator) createOffer(peer, targetId);
@@ -144,6 +159,8 @@ function addUser(user) {
 
 // MIC TOGGLE
 function toggleMic() {
+  if (!localStream) return;
+
   localStream.getAudioTracks().forEach(track => {
     track.enabled = !track.enabled;
   });
@@ -165,6 +182,10 @@ function startTimer() {
 
 function endCall() {
   clearInterval(timerInterval);
-  localStream.getTracks().forEach(t => t.stop());
+
+  if (localStream) {
+    localStream.getTracks().forEach(t => t.stop());
+  }
+
   location.reload();
 }
