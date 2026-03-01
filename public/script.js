@@ -22,17 +22,19 @@ async function checkLogin() {
   loginBox.classList.add("hidden");
   callBox.classList.remove("hidden");
 
-  // 🔥 Echo Fix Applied Here
+  // 🔥 Strong Mobile Echo Reduction
   localStream = await navigator.mediaDevices.getUserMedia({
     audio: {
       echoCancellation: true,
       noiseSuppression: true,
-      autoGainControl: true
+      autoGainControl: true,
+      channelCount: 1,
+      sampleRate: 48000,
+      sampleSize: 16
     }
   });
 
   socket.emit("join", name);
-
   startTimer();
 }
 
@@ -107,7 +109,6 @@ function createPeer(targetId, initiator) {
   const peer = new RTCPeerConnection(config);
   peers[targetId] = peer;
 
-  // Add mic tracks safely
   if (localStream) {
     localStream.getTracks().forEach(track => {
       peer.addTrack(track, localStream);
@@ -123,11 +124,13 @@ function createPeer(targetId, initiator) {
     }
   };
 
-  // 🔥 Prevent self-audio loop
+  // 🔥 Better Mobile Audio Handling
   peer.ontrack = (event) => {
     if (event.streams && event.streams[0]) {
       remoteAudio.srcObject = event.streams[0];
-      remoteAudio.volume = 1;
+      remoteAudio.setAttribute("playsinline", true);
+      remoteAudio.muted = false;
+      remoteAudio.volume = 0.8; // full volume avoid
     }
   };
 
