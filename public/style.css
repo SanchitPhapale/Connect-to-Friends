@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+.container {
+    width: 100%;
+    max-width: 380px;
+}
+
+.box {
+    background: rgba(255, 255, 255, 0.96);
+    padding: 22px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    margin: 0;
+    /* 👈 IMPORTANT */
+}
+
+.hidden {
+    display: none;
+}
+
+h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #243b55;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.controls button {
+    width: 50%;
+}
+
+.end {
+    background: #e74c3c;
+}
+
+#timer {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+li {
+    background: #f1f1f1;
+    margin-bottom: 6px;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+#error {
+    color: red;
+    font-size: 14px;
+}
+
+/* 📱 Small phones */
+@media (max-width: 360px) {
+    h2 {
+        font-size: 20px;
+    }
+
+    button {
+        font-size: 15px;
+    }
+}
